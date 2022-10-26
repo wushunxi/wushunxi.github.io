@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="介绍了AES和MD5加密算法…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="加密算法">
+<meta property="og:url" content="http://example.com/2022/10/26/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="有迹可循">
+<meta property="og:description" content="介绍了AES和MD5加密算法…">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-26T07:06:56.039Z">
+<meta property="article:modified_time" content="2022-10-26T07:45:48.110Z">
+<meta property="article:author" content="有迹可循">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/10/26/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>加密算法 | 有迹可循</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">有迹可循</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/10/26/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="有迹可循">
+      <meta itemprop="description" content="好风凭借力，送我上青天">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="有迹可循">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          加密算法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-26 15:06:56 / 修改时间：15:45:48" itemprop="dateCreated datePublished" datetime="2022-10-26T15:06:56+08:00">2022-10-26</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>介绍了AES和MD5加密算法…<span id="more"></span></p>
+<h2 id="一、对称性加密算法"><a href="#一、对称性加密算法" class="headerlink" title="一、对称性加密算法"></a>一、对称性加密算法</h2><p>对称式加密就是加密和解密使用同一个密钥。信息接收双方都需事先知道密匙和加解密算法且其密匙是相同的，之后便是对数据进行加解密了。对称加密算法用来对敏感数据等信息进行加密。</p>
+<h2 id="二、非对称算法"><a href="#二、非对称算法" class="headerlink" title="二、非对称算法"></a>二、非对称算法</h2><p>非对称式加密就是加密和解密所使用的不是同一个密钥，通常有两个密钥，称为”公钥”和”私钥”，它们两个必需配对使用，否则不能打开加密文件。发送双方A,B事先均生成一堆密匙，然后A将自己的公有密匙发送给B，B将自己的公有密匙发送给A，如果A要给B发送消 息，则先需要用B的公有密匙进行消息加密，然后发送给B端，此时B端再用自己的私有密匙进行消息解密，B向A发送消息时为同样的道理。</p>
+<h2 id="三、散列算法"><a href="#三、散列算法" class="headerlink" title="三、散列算法"></a>三、散列算法</h2><p>Hash，一般翻译做“散列”，也有直接音译为”哈希”的，就是把任意长度的输入（又叫做预映射，pre-image），通过散列算法，变换成固定长度的输出，该输出就是散列值。这种转换是一种压缩映射，也就是，散列值的空间通常远小于输入的空间，不同的输入可能会散列成相同的输出，而不可能从散列值来唯一地确定输入值。<br>简单的说就是一种将任意长度的消息压缩到某一固定长度的消息摘要的函数。<br>Hash主要用于信息安全领域中加密算法，他把一些不同长度的信息转化成杂乱的128位的编码里,叫做Hash值.也可以说，Hash就是找到一种数据内容和数据存放地址之间的映射关系。</p>
+<p>在信息安全技术中，经常需要验证消息的完整性，散列(Hash)函数提供了这一服务，它对不同长度的输入消息，产生固定长度的输出。这个固定长度的输出称为原输入消息的”散列”或”消息摘要”(Message digest)。散列算法不算加密算法，因为其结果是不可逆的，既然是不可逆的，那么当然不是用来加密的，而是签名（当然也有需要公钥私钥的签名）。</p>
+<h2 id="四、算法举例"><a href="#四、算法举例" class="headerlink" title="四、算法举例"></a>四、算法举例</h2><h3 id="1、对称性加密算法有：AES、DES、3DES"><a href="#1、对称性加密算法有：AES、DES、3DES" class="headerlink" title="1、对称性加密算法有：AES、DES、3DES"></a>1、对称性加密算法有：AES、DES、3DES</h3><p>用途：对称加密算法用来对敏感数据等信息进行加密</p>
+<h4 id="1-1、DES（Data-Encryption-Standard）"><a href="#1-1、DES（Data-Encryption-Standard）" class="headerlink" title="1.1、DES（Data Encryption Standard）"></a>1.1、DES（Data Encryption Standard）</h4><p>数据加密标准，速度较快，适用于加密大量数据的场合。</p>
+<h4 id="1-2、3DES（Triple-DES）"><a href="#1-2、3DES（Triple-DES）" class="headerlink" title="1.2、3DES（Triple DES）"></a>1.2、3DES（Triple DES）</h4><p>是基于DES，对一块数据用三个不同的密钥进行三次加密，强度更高。</p>
+<h4 id="1-3、-AES（Advanced-Encryption-Standard）"><a href="#1-3、-AES（Advanced-Encryption-Standard）" class="headerlink" title="1.3、 AES（Advanced Encryption Standard）"></a>1.3、 AES（Advanced Encryption Standard）</h4><p>高级加密标准，是下一代的加密算法标准，速度快，安全级别高；AES是一个使用128为分组块的分组加密算法，分组块和128、192或256位的密钥一起作为输入，对4×4的字节数组上进行操作。众所周之AES是种十分高效的算法，尤其在8位架构中，这源于它面向字节的设计。AES 适用于8位的小型单片机或者普通的32位微处理器,并且适合用专门的硬件实现，硬件实现能够使其吞吐量（每秒可以到达的加密&#x2F;解密bit数）达到十亿量级。同样，其也适用于RFID系统。</p>
+<h3 id="2、非对称性算法有：RSA、DSA、ECC"><a href="#2、非对称性算法有：RSA、DSA、ECC" class="headerlink" title="2、非对称性算法有：RSA、DSA、ECC"></a>2、非对称性算法有：RSA、DSA、ECC</h3><h4 id="2-1、RSA"><a href="#2-1、RSA" class="headerlink" title="2.1、RSA"></a>2.1、RSA</h4><p>由 RSA 公司发明，是一个支持变长密钥的公共密钥算法，需要加密的文件块的长度也是可变的。RSA在国外早已进入实用阶段，已研制出多种高速的RSA的专用芯片。</p>
+<p>nodejs及web端实现可rsa加密解密以参考：JavaScript的RSA加密库</p>
+<h4 id="2-2、DSA（Digital-Signature-Algorithm）"><a href="#2-2、DSA（Digital-Signature-Algorithm）" class="headerlink" title="2.2、DSA（Digital Signature Algorithm）"></a>2.2、DSA（Digital Signature Algorithm）</h4><p>数字签名算法，是一种标准的 DSS（数字签名标准），严格来说不算加密算法。</p>
+<h4 id="2-3、ECC（Elliptic-Curves-Cryptography）"><a href="#2-3、ECC（Elliptic-Curves-Cryptography）" class="headerlink" title="2.3、ECC（Elliptic Curves Cryptography）"></a>2.3、ECC（Elliptic Curves Cryptography）</h4><p>椭圆曲线密码编码学。ECC和RSA相比，具有多方面的绝对优势，主要有：抗攻击性强。相同的密钥长度，其抗攻击性要强很多倍。计算量小，处理速度快。ECC总的速度比RSA、DSA要快得多。存储空间占用小。ECC的密钥尺寸和系统参数与RSA、DSA相比要小得多，意味着它所占的存贮空间要小得多。这对于加密算法在IC卡上的应用具有特别重要的意义。带宽要求低。当对长消息进行加解密时，三类密码系统有相同的带宽要求，但应用于短消息时ECC带宽要求却低得多。带宽要求低使ECC在无线网络领域具有广泛的应用前景。</p>
+<h3 id="3、散列算法（签名算法）有：MD5、SHA1、HMAC"><a href="#3、散列算法（签名算法）有：MD5、SHA1、HMAC" class="headerlink" title="3、散列算法（签名算法）有：MD5、SHA1、HMAC"></a>3、散列算法（签名算法）有：MD5、SHA1、HMAC</h3><p>Hash算法：MD2、MD4、MD5、HAVAL、SHA、SHA-1、HMAC、HMAC-MD5、HMAC-SHA1</p>
+<h4 id="2-1、MD5"><a href="#2-1、MD5" class="headerlink" title="2.1、MD5"></a>2.1、MD5</h4><p>MD5是一种不可逆的加密算法，目前是最牢靠的加密算法之一，尚没有能够逆运算的程序被开发出来，它对应任何字符串都可以加密成一段唯一的固定长度的代码。</p>
+<h4 id="2-2、-SHA1"><a href="#2-2、-SHA1" class="headerlink" title="2.2、 SHA1"></a>2.2、 SHA1</h4><p>是由NISTNSA设计为同DSA一起使用的，它对长度小于264的输入，产生长度为160bit的散列值，因此抗穷举(brute-force)性更好。SHA-1设计时基于和MD4相同原理,并且模仿了该算法。SHA-1是由美国标准技术局（NIST）颁布的国家标准，是一种应用最为广泛的Hash函数算法，也是目前最先进的加密技术，被政府部门和私营业主用来处理敏感的信息。而SHA-1基于MD5，MD5又基于MD4。</p>
+<h4 id="2-3、HMAC-SHA1"><a href="#2-3、HMAC-SHA1" class="headerlink" title="2.3、HMAC_SHA1"></a>2.3、HMAC_SHA1</h4><p>是密钥相关的哈希运算消息认证码（Hash-based Message Authentication Code）,HMAC运算利用哈希算法，以一个密钥和一个消息为输入，生成一个消息摘要作为输出。也就是说HMAC是需要一个密钥的。所以，HMAC_SHA1也是需要一个密钥的（即平时说的加盐），而SHA1不需要。</p>
+<p>用途：主要用于验证，防止信息被修。具体用途如：文件校验、数字签名、鉴权协议</p>
+<h2 id="五、算法实现"><a href="#五、算法实现" class="headerlink" title="五、算法实现"></a>五、算法实现</h2><h3 id="AES"><a href="#AES" class="headerlink" title="AES"></a>AES</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.crypto.Cipher;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.SecretKeySpec;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.codec.binary.Base64;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AES</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 加密</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">Encrypt</span><span class="params">(String sSrc, String sKey)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">if</span> (sKey == <span class="literal">null</span>) &#123;</span><br><span class="line">            System.out.print(<span class="string">&quot;Key为空null&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 判断Key是否为16位</span></span><br><span class="line">        <span class="keyword">if</span> (sKey.length() != <span class="number">16</span>) &#123;</span><br><span class="line">            System.out.print(<span class="string">&quot;Key长度不是16位&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">byte</span>[] raw = sKey.getBytes(<span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">        <span class="type">SecretKeySpec</span> <span class="variable">skeySpec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(raw, <span class="string">&quot;AES&quot;</span>);</span><br><span class="line">        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;AES/ECB/PKCS5Padding&quot;</span>);<span class="comment">//&quot;算法/模式/补码方式&quot;</span></span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);</span><br><span class="line">        <span class="type">byte</span>[] encrypted = cipher.doFinal(sSrc.getBytes(<span class="string">&quot;utf-8&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Base64</span>().encodeToString(encrypted);<span class="comment">//此处使用BASE64做转码功能，同时能起到2次加密的作用。</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解密</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">Decrypt</span><span class="params">(String sSrc, String sKey)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 判断Key是否正确</span></span><br><span class="line">            <span class="keyword">if</span> (sKey == <span class="literal">null</span>) &#123;</span><br><span class="line">                System.out.print(<span class="string">&quot;Key为空null&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 判断Key是否为16位</span></span><br><span class="line">            <span class="keyword">if</span> (sKey.length() != <span class="number">16</span>) &#123;</span><br><span class="line">                System.out.print(<span class="string">&quot;Key长度不是16位&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="type">byte</span>[] raw = sKey.getBytes(<span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">            <span class="type">SecretKeySpec</span> <span class="variable">skeySpec</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SecretKeySpec</span>(raw, <span class="string">&quot;AES&quot;</span>);</span><br><span class="line">            <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(<span class="string">&quot;AES/ECB/PKCS5Padding&quot;</span>);</span><br><span class="line">            cipher.init(Cipher.DECRYPT_MODE, skeySpec);</span><br><span class="line">            <span class="type">byte</span>[] encrypted1 = <span class="keyword">new</span> <span class="title class_">Base64</span>().decode(sSrc);<span class="comment">//先用base64解密</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="type">byte</span>[] original = cipher.doFinal(encrypted1);</span><br><span class="line">                <span class="type">String</span> <span class="variable">originalString</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(original,<span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> originalString;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                System.out.println(e.toString());</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">            System.out.println(ex.toString());</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="SHA1"><a href="#SHA1" class="headerlink" title="SHA1"></a>SHA1</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getSha1</span><span class="params">(String str)</span></span><br><span class="line">&#123;</span><br><span class="line">	    <span class="keyword">if</span> (<span class="literal">null</span> == str || <span class="number">0</span> == str.length())&#123;</span><br><span class="line">	        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">	    &#125;</span><br><span class="line">	    <span class="type">char</span>[] hexDigits = &#123; <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;9&#x27;</span>, </span><br><span class="line">	            <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>, <span class="string">&#x27;e&#x27;</span>, <span class="string">&#x27;f&#x27;</span>&#125;;</span><br><span class="line">	    <span class="keyword">try</span> &#123;</span><br><span class="line">	        <span class="type">MessageDigest</span> <span class="variable">mdTemp</span> <span class="operator">=</span> MessageDigest.getInstance(<span class="string">&quot;SHA1&quot;</span>);</span><br><span class="line">	        mdTemp.update(str.getBytes(<span class="string">&quot;UTF-8&quot;</span>));</span><br><span class="line">	         </span><br><span class="line">	        <span class="type">byte</span>[] md = mdTemp.digest();</span><br><span class="line">	        <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> md.length;</span><br><span class="line">	        <span class="type">char</span>[] buf = <span class="keyword">new</span> <span class="title class_">char</span>[j * <span class="number">2</span>];</span><br><span class="line">	        <span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">	        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; j; i++) &#123;</span><br><span class="line">	            <span class="type">byte</span> <span class="variable">byte0</span> <span class="operator">=</span> md[i];</span><br><span class="line">	            buf[k++] = hexDigits[byte0 &gt;&gt;&gt; <span class="number">4</span> &amp; <span class="number">0xf</span>];</span><br><span class="line">	            buf[k++] = hexDigits[byte0 &amp; <span class="number">0xf</span>];</span><br><span class="line">	        &#125;</span><br><span class="line">	        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(buf);</span><br><span class="line">	    &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</span><br><span class="line">	        e.printStackTrace();</span><br><span class="line">	    &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">	        e.printStackTrace();</span><br><span class="line">	    &#125;</span><br><span class="line">	    <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.UnsupportedEncodingException;</span><br><span class="line"><span class="keyword">import</span> java.security.MessageDigest;</span><br><span class="line"><span class="keyword">import</span> java.security.NoSuchAlgorithmException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyMD5Util</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">slat</span> <span class="operator">=</span> <span class="string">&quot;&amp;%5123***&amp;&amp;%%$$#@&quot;</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">encrypt</span><span class="params">(String dataStr)</span> &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			dataStr = dataStr + slat;</span><br><span class="line">			<span class="type">MessageDigest</span> <span class="variable">m</span> <span class="operator">=</span> MessageDigest.getInstance(<span class="string">&quot;MD5&quot;</span>);</span><br><span class="line">			m.update(dataStr.getBytes(<span class="string">&quot;UTF8&quot;</span>));</span><br><span class="line">			<span class="type">byte</span> s[] = m.digest();</span><br><span class="line">			<span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">			<span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; s.length; i++) &#123;</span><br><span class="line">				result += Integer.toHexString((<span class="number">0x000000FF</span> &amp; s[i]) | <span class="number">0xFFFFFF00</span>).substring(<span class="number">6</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> result;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>参考文档：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/zpKang/p/13347985.html">java中MD5加密 - zpk-aaron - 博客园 (cnblogs.com)</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/10/24/SSM%E6%A1%86%E6%9E%B6%E6%80%BB%E7%BB%93/" rel="prev" title="SSM框架总结">
+      <i class="fa fa-chevron-left"></i> SSM框架总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/10/26/Java%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/" rel="next" title="知识点汇总">
+      知识点汇总 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AF%B9%E7%A7%B0%E6%80%A7%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">一、对称性加密算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E9%9D%9E%E5%AF%B9%E7%A7%B0%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">二、非对称算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%95%A3%E5%88%97%E7%AE%97%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">三、散列算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%AE%97%E6%B3%95%E4%B8%BE%E4%BE%8B"><span class="nav-number">4.</span> <span class="nav-text">四、算法举例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%AF%B9%E7%A7%B0%E6%80%A7%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E6%9C%89%EF%BC%9AAES%E3%80%81DES%E3%80%813DES"><span class="nav-number">4.1.</span> <span class="nav-text">1、对称性加密算法有：AES、DES、3DES</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1%E3%80%81DES%EF%BC%88Data-Encryption-Standard%EF%BC%89"><span class="nav-number">4.1.1.</span> <span class="nav-text">1.1、DES（Data Encryption Standard）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2%E3%80%813DES%EF%BC%88Triple-DES%EF%BC%89"><span class="nav-number">4.1.2.</span> <span class="nav-text">1.2、3DES（Triple DES）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3%E3%80%81-AES%EF%BC%88Advanced-Encryption-Standard%EF%BC%89"><span class="nav-number">4.1.3.</span> <span class="nav-text">1.3、 AES（Advanced Encryption Standard）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E9%9D%9E%E5%AF%B9%E7%A7%B0%E6%80%A7%E7%AE%97%E6%B3%95%E6%9C%89%EF%BC%9ARSA%E3%80%81DSA%E3%80%81ECC"><span class="nav-number">4.2.</span> <span class="nav-text">2、非对称性算法有：RSA、DSA、ECC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1%E3%80%81RSA"><span class="nav-number">4.2.1.</span> <span class="nav-text">2.1、RSA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2%E3%80%81DSA%EF%BC%88Digital-Signature-Algorithm%EF%BC%89"><span class="nav-number">4.2.2.</span> <span class="nav-text">2.2、DSA（Digital Signature Algorithm）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3%E3%80%81ECC%EF%BC%88Elliptic-Curves-Cryptography%EF%BC%89"><span class="nav-number">4.2.3.</span> <span class="nav-text">2.3、ECC（Elliptic Curves Cryptography）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E6%95%A3%E5%88%97%E7%AE%97%E6%B3%95%EF%BC%88%E7%AD%BE%E5%90%8D%E7%AE%97%E6%B3%95%EF%BC%89%E6%9C%89%EF%BC%9AMD5%E3%80%81SHA1%E3%80%81HMAC"><span class="nav-number">4.3.</span> <span class="nav-text">3、散列算法（签名算法）有：MD5、SHA1、HMAC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1%E3%80%81MD5"><span class="nav-number">4.3.1.</span> <span class="nav-text">2.1、MD5</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2%E3%80%81-SHA1"><span class="nav-number">4.3.2.</span> <span class="nav-text">2.2、 SHA1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3%E3%80%81HMAC-SHA1"><span class="nav-number">4.3.3.</span> <span class="nav-text">2.3、HMAC_SHA1</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">5.</span> <span class="nav-text">五、算法实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AES"><span class="nav-number">5.1.</span> <span class="nav-text">AES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SHA1"><span class="nav-number">5.2.</span> <span class="nav-text">SHA1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MD5"><span class="nav-number">5.3.</span> <span class="nav-text">MD5</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="有迹可循"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">有迹可循</p>
+  <div class="site-description" itemprop="description">好风凭借力，送我上青天</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2022/10/23/20：00 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">有迹可循</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+    <script defer src="/lib/three/three-waves.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
