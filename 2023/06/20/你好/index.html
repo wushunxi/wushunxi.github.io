@@ -1,114 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		
-<title>Hexo</title>
-<meta charset="utf-8" />
-<meta name="keywords" content="" />
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=5"
-/>
-<meta name="generator" content="Hexo 6.3.0">
-<link rel="stylesheet" href="/css/style.css?v=1687251793457">
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-<link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Noto+Serif+SC&display=swap"
-    media="all"
-/>
-<link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/highlight.js@9.15.8/styles/solarized-light.css"
-/>
-<script src="/js/core.js?v=1687251793457"></script>
+extends ./_layout.pug
 
+block content
+  // Just used to judge whether it is an article page
+  div#is-post
+  div.post
+    include ./_mixins/post-header.pug
+    include ./_mixins/gallery.pug
 
+    +postHeader(page)
 
+    div.post-body
+      if page.photos && page.photos.length
+        +gallery(page)
+      != page.content
 
+    footer.post-footer
+      if theme.post_widget.end_text.enable
+        div.post-ending.ending
+          div.ending__text= __('post.end')
 
+      if page.copyright === true || (isShowCC && theme.creative_commons.post)
+        include ./_partials/widgets/copyright.pug
 
-<script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.1/lazysizes.min.js" async></script>
-<!--<script src="" async></script>--> 
-	</head>
+      if theme.post_widget.tags
+        if page.tags && page.tags.length > 0
+          div.post-tags
+            each tag in page.tags.data
+              span.post-tags-item
+                span.post-tags-item__icon
+                  i(class=theme.icon.post_tags)
+                a.post-tags-item__link(href=tag.permalink)= tag.name
 
-	<body>
-        <div class="header  ">
-    <div class="container">
-        <a class="logo" href="/" title="Hexo">Hexo</a>
-        <ul class="nav">
-            
-                <li class="nav-item"><a href="/archives">Archives</a></li>
-            
-                <li class="nav-item"><a href="/about.html">About</a></li>
-            
-        </ul>
-    </div>
-</div>
-        <div class="content">
-	<div class="banner">
-		<div class="container">
-			<h1></h1>
-			<div class="info"><span class="date">2023年6月20日</span>•John Doe 
-			
-				
-					<a href="https://github.com/nexmoe/books/tree/master/source/_posts/你好.md" target="_blank" rel="external nofollow noreferrer noopener">编辑</a>
-				
-			</div>
-			
-		</div>
-	</div>
-	<div class="container">
-		<article class="post">
-			<p>你好世界？</p>
+      if theme.post_widget.share.enable
+        include ./_partials/widgets/share.pug
 
-			<br>
-			
-		</article>
-	</div>
-	<div class="other">
-		<div class="container">
-			<nav class="post-nav">
+      if isShowReward
+        include ./_partials/widgets/reward.pug
 
-</nav> 
-		</div>
-	</div>
-	<div class="container comment">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.5.0/dist/gitalk.min.css">
-<div id="gitalk"></div>
-<script src="https://cdn.jsdelivr.net/npm/gitalk@1.5.0/dist/gitalk.min.js"></script>
-<script type="text/javascript">
-    var gitalk = new Gitalk({
-        clientID: '80b2453b6d5f37ad6225',
-        clientSecret: '43e99fa852795c9a7b3eb924b2558c64b84bbdeb',
-        id: window.location.pathname,
-        repo: 'nexmoe.github.io',
-        owner: 'nexmoe',
-        admin: 'nexmoe'
-    })
-    gitalk.render('gitalk')
-</script>
-	</div>
-</div>
-		<div class="footer">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-left">Hexo</div>
-            <div class="footer-right"> 
-                <div class="footer-links">
-                    
-                        <a target="_blank" rel="noopener" href="https://nexmoe.com/">折影轻梦</a>
-                    
-                        <a target="_blank" rel="noopener" href="https://github.com/Yet-The-Books/hexo-theme-yet-the-books">还有书籍</a>
-                    
-                </div>
-                <div calss="footer-copyright">&copy; 2023 Hexo
-                    Using <a rel="noreferrer" href="http://hexo.io/" target="_blank">Hexo</a> 
-                    &amp; <a rel="noreferrer" href="https://github.com/Yet-The-Books/hexo-theme-yet-the-books" target="_blank">Yet The Books</a>
-                </div>
-            </div>  
-        </div>
-    </div>
-</div>
-	</body>
-</html>
+      include ./_partials/widgets/paginator.pug
